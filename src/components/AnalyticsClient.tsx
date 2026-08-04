@@ -278,53 +278,37 @@ export function AnalyticsClient({
       </div>
 
       {/* Core KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-        <div className="rounded-xl border border-white/10 bg-gradient-to-br from-[#111827]/80 to-[#111827]/40 backdrop-blur-md p-5 shadow-lg group hover:border-[#1A73E8]/50 transition-colors">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="rounded-xl border border-white/10 bg-gradient-to-br from-[#111827]/80 to-[#111827]/40 backdrop-blur-md p-5 shadow-lg group hover:border-[#10B981]/50 transition-colors">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-blue-500/20 rounded-lg group-hover:bg-blue-500/30 transition-colors"><Users className="h-4 w-4 text-blue-400" /></div>
-            <h3 className="text-xs font-medium text-zinc-400 uppercase tracking-wider">New Users</h3>
-          </div>
-          <p className="text-2xl font-bold text-white">{data.totalUsers.toLocaleString()}</p>
-        </div>
-
-        <div className="rounded-xl border border-white/10 bg-gradient-to-br from-[#111827]/80 to-[#111827]/40 backdrop-blur-md p-5 shadow-lg group hover:border-emerald-500/50 transition-colors">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-emerald-500/20 rounded-lg group-hover:bg-emerald-500/30 transition-colors"><TrendingUp className="h-4 w-4 text-emerald-400" /></div>
-            <h3 className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Estimated MRR</h3>
-          </div>
-          <p className="text-2xl font-bold text-[#10B981]">{data.currentMRR.toLocaleString()} <span className="text-sm font-normal text-zinc-500">DZD</span></p>
-        </div>
-
-        <div className="rounded-xl border border-white/10 bg-gradient-to-br from-[#111827]/80 to-[#111827]/40 backdrop-blur-md p-5 shadow-lg group hover:border-purple-500/50 transition-colors">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-purple-500/20 rounded-lg group-hover:bg-purple-500/30 transition-colors"><DollarSign className="h-4 w-4 text-purple-400" /></div>
-            <h3 className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Gross Vol</h3>
+            <div className="p-2 bg-emerald-500/20 rounded-lg group-hover:bg-emerald-500/30 transition-colors"><DollarSign className="h-4 w-4 text-emerald-400" /></div>
+            <h3 className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Total Revenue</h3>
           </div>
           <p className="text-2xl font-bold text-white">{data.grossRevenue.toLocaleString()} <span className="text-sm font-normal text-zinc-500">DZD</span></p>
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-gradient-to-br from-[#111827]/80 to-[#111827]/40 backdrop-blur-md p-5 shadow-lg group hover:border-amber-500/50 transition-colors">
+        <div className="rounded-xl border border-white/10 bg-gradient-to-br from-[#111827]/80 to-[#111827]/40 backdrop-blur-md p-5 shadow-lg group hover:border-purple-500/50 transition-colors">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-amber-500/20 rounded-lg group-hover:bg-amber-500/30 transition-colors"><CreditCard className="h-4 w-4 text-amber-400" /></div>
-            <h3 className="text-xs font-medium text-zinc-400 uppercase tracking-wider">ARPU</h3>
+            <div className="p-2 bg-purple-500/20 rounded-lg group-hover:bg-purple-500/30 transition-colors"><Users className="h-4 w-4 text-purple-400" /></div>
+            <h3 className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Paying Users</h3>
           </div>
-          <p className="text-2xl font-bold text-white">{Math.round(data.arpu).toLocaleString()} <span className="text-sm font-normal text-zinc-500">DZD</span></p>
+          <p className="text-2xl font-bold text-white">{data.activePaidUsers.toLocaleString()}</p>
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-gradient-to-br from-[#111827]/80 to-[#111827]/40 backdrop-blur-md p-5 shadow-lg group hover:border-indigo-500/50 transition-colors">
+        <div className="rounded-xl border border-white/10 bg-gradient-to-br from-[#111827]/80 to-[#111827]/40 backdrop-blur-md p-5 shadow-lg group hover:border-zinc-400/50 transition-colors">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-indigo-500/20 rounded-lg group-hover:bg-indigo-500/30 transition-colors"><Zap className="h-4 w-4 text-indigo-400" /></div>
-            <h3 className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Proj. LTV</h3>
+            <div className="p-2 bg-zinc-500/20 rounded-lg group-hover:bg-zinc-500/30 transition-colors"><UserMinus className="h-4 w-4 text-zinc-400" /></div>
+            <h3 className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Free Users</h3>
           </div>
-          <p className="text-2xl font-bold text-white">{Math.round(data.ltv).toLocaleString()} <span className="text-sm font-normal text-zinc-500">DZD</span></p>
+          <p className="text-2xl font-bold text-white">{(data.tierData.find(d => d.name === 'Free')?.value || 0).toLocaleString()}</p>
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-gradient-to-br from-[#111827]/80 to-[#111827]/40 backdrop-blur-md p-5 shadow-lg group hover:border-red-500/50 transition-colors">
+        <div className="rounded-xl border border-white/10 bg-gradient-to-br from-[#111827]/80 to-[#111827]/40 backdrop-blur-md p-5 shadow-lg group hover:border-[#1A73E8]/50 transition-colors">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-red-500/20 rounded-lg group-hover:bg-red-500/30 transition-colors"><UserMinus className="h-4 w-4 text-red-400" /></div>
-            <h3 className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Churn Rate</h3>
+            <div className="p-2 bg-blue-500/20 rounded-lg group-hover:bg-blue-500/30 transition-colors"><TrendingUp className="h-4 w-4 text-blue-400" /></div>
+            <h3 className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Current MRR</h3>
           </div>
-          <p className="text-2xl font-bold text-white">{data.churnRate.toFixed(1)}<span className="text-sm font-normal text-zinc-500">%</span></p>
+          <p className="text-2xl font-bold text-white">{data.currentMRR.toLocaleString()} <span className="text-sm font-normal text-zinc-500">DZD</span></p>
         </div>
       </div>
 
