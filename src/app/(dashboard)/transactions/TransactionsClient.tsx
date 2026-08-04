@@ -14,11 +14,13 @@ type Transaction = {
 }
 
 export function TransactionsClient({ 
-  transactions,
-  profiles
+  transactions, 
+  profiles,
+  fetchError
 }: { 
-  transactions: Transaction[],
-  profiles: Profile[]
+  transactions: Transaction[], 
+  profiles: Profile[],
+  fetchError?: string | null
 }) {
   const getProfile = (userId: string) => {
     if (!userId) return undefined
@@ -51,7 +53,14 @@ export function TransactionsClient({
               </tr>
             </thead>
             <tbody className="divide-y divide-white/10">
-              {transactions.length === 0 ? (
+              {fetchError ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-12 text-center">
+                    <div className="text-red-400 font-medium mb-1">Error Loading Transactions</div>
+                    <div className="text-red-400/70 text-sm">{fetchError}</div>
+                  </td>
+                </tr>
+              ) : transactions.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center text-zinc-500">
                     No transactions found.

@@ -20,16 +20,15 @@ export default async function TransactionsPage() {
 
       const res = await fetch(apiUrl, {
         headers: { 'Authorization': `Bearer ${process.env.CHARGILY_SECRET_KEY}` },
-        next: { revalidate: 60 }
+        cache: 'no-store'
       })
       if (res.ok) {
         const data = await res.json()
         if (data && data.data) {
-          chargilyTransactions = data.data
-            .filter((c: any) => c.status === 'paid')
-            .map((c: any) => {
-              let userId = null
-              let planMonths = 1
+          chargilyTransactions = data.data.map((c: any) => {
+            let userId = 'unknown'
+            let planMonths = 1
+            if (c.metadata) {
               if (Array.isArray(c.metadata)) {
                 userId = c.metadata.find((m: any) => m.user_id)?.user_id
                 planMonths = c.metadata.find((m: any) => m.plan_months)?.plan_months || 1
@@ -37,21 +36,29 @@ export default async function TransactionsPage() {
                 userId = c.metadata.user_id
                 planMonths = c.metadata.plan_months || 1
               }
-              return {
-                id: c.id,
-                user_id: userId || 'unknown',
-                amount_dzd: c.amount,
-                plan_months: planMonths,
-                transaction_date: new Date(typeof c.created_at === 'number' ? c.created_at * 1000 : c.created_at).toISOString(),
-                status: 'Success',
-                source: 'Chargily'
-              }
-            })
+            }
+            return {
+              id: c.id,
+              user_id: userId || 'unknown',
+              amount_dzd: c.amount,
+              transaction_date: new Date(typeof c.created_at === 'number' ? c.created_at * 1000 : c.created_at).toISOString(),
+              status: c.status === 'paid' ? 'Success' : c.status === 'failed' || c.status === 'canceled' ? 'Failed' : 'Pending',
+              source: 'Chargily',
+              plan_months: planMonths
+            }
+          }).filter((t: any) => t !== null)
         }
+      } else {
+        const text = await res.text()
+        console.error('Chargily API Error:', res.status, text)
+        fetchError = `Chargily Error ${res.status}: ${text}`
       }
-    } catch (e) {
-      console.error('Failed to fetch Chargily checkouts', e)
+    } catch (e: any) {
+      console.error('Chargily fetch failed:', e)
+      fetchError = e.message
     }
+  } else {
+    fetchError = 'CHARGILY_SECRET_KEY is not set'
   }
 
   const allTransactions = [...(dbTransactions || []).map(t => ({ ...t, source: 'Database', plan_months: t.plan_months || 1 })), ...chargilyTransactions]
@@ -84,6 +91,7 @@ export default async function TransactionsPage() {
         <TransactionsClient 
           transactions={allTransactions} 
           profiles={profiles || []} 
+          fetchError={fetchError}
         />
       </main>
     </>
