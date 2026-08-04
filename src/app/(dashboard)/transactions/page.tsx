@@ -69,7 +69,7 @@ export default async function TransactionsPage() {
   const userIds = Array.from(new Set(allTransactions.map(t => t.user_id?.trim()).filter(id => id && uuidRegex.test(id))))
   let profiles: any[] = []
   if (userIds.length > 0) {
-    const { data, error } = await supabase.from('profiles').select('id, full_name, username, email, phone').in('id', userIds)
+    const { data, error } = await supabase.from('profiles').select('id, full_name, email, phone').in('id', userIds)
     if (error) console.error('Error fetching profiles:', error)
     if (data) profiles = data
   }

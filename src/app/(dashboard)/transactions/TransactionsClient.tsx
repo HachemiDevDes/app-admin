@@ -91,7 +91,7 @@ export function TransactionsClient({
                           </div>
                           <div className="flex flex-col">
                             <div className="font-medium text-white">
-                              {profile?.full_name || profile?.username || 'Unknown User'}
+                              {profile?.full_name || 'Unknown User'}
                             </div>
                             {profile?.email && (
                               <div className="text-xs text-zinc-400">{profile.email}</div>
