@@ -20,7 +20,7 @@ export default async function TransactionsPage() {
           : 'https://pay.chargily.net/api/v2/checkouts'
 
       const res = await fetch(apiUrl, {
-        headers: { 'Authorization': `Bearer ${process.env.CHARGILY_SECRET_KEY}` },
+        headers: { 'Authorization': `Bearer ${process.env.CHARGILY_SECRET_KEY?.trim()}` },
         cache: 'no-store'
       })
       if (res.ok) {
