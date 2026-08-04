@@ -47,7 +47,7 @@ export function AnalyticsClient({
     // Filter raw data based on time period
     const filteredProfiles = profiles.filter(p => new Date(p.created_at) >= startDate)
     const filteredConnections = connections.filter(c => new Date(c.created_at) >= startDate)
-    const filteredTransactions = transactions.filter(t => new Date(t.transaction_date) >= startDate && t.status === 'success')
+    const filteredTransactions = transactions.filter(t => new Date(t.transaction_date) >= startDate && t.status === 'Success')
 
     // Find all paying users globally
     const payingUserIds = new Set(transactions.map(t => t.user_id))
