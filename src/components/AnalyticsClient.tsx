@@ -11,7 +11,7 @@ import { WorldMap } from './WorldMap'
 type Profile = { id: string; created_at: string; industry: string; job_title: string; address?: string; phone?: string }
 type Connection = { created_at: string; source?: string; user_id?: string }
 type Subscription = { id: string; user_id: string; tier: string; start_date: string; end_date: string; created_at: string; status: string }
-type Transaction = { id: string; user_id: string; amount_dzd: number; transaction_date: string; status: string }
+type Transaction = { id: string; user_id: string; amount_dzd: number; transaction_date: string; status: string; plan_months?: number }
 
 const TIER_COLORS = {
   'Free': '#9CA3AF', // zinc-400
@@ -77,13 +77,17 @@ export function AnalyticsClient({
         totalActiveUsers++
         if (isPaid) {
           activePaidUsers++
+          
+          // Find the most recent transaction for this user
+          const userTxs = transactions.filter(t => t.user_id === sub.user_id).sort((a, b) => new Date(b.transaction_date).getTime() - new Date(a.transaction_date).getTime())
           let price = 0
-          if (sub.tier === 'Basic') price = 1000
-          else if (sub.tier === 'Popular') price = 2500
-          else if (['Premium', 'Pro', 'Business'].includes(sub.tier)) {
-            price = 5000
-            sub.tier = 'Premium'
+          if (userTxs.length > 0) {
+            const latestTx = userTxs[0]
+            const amount = latestTx.amount_dzd || 0
+            const months = latestTx.plan_months || 1
+            price = amount / months
           }
+
           currentMRR += price
           if(tierMRR[sub.tier] !== undefined) tierMRR[sub.tier] += price
           if(tierCounts[sub.tier] !== undefined) tierCounts[sub.tier]++

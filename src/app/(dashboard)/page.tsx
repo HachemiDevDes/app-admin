@@ -13,6 +13,52 @@ export default async function DashboardOverview() {
   const { data: subscriptions } = await supabase.from('subscriptions').select('id, user_id, tier, start_date, end_date, created_at, status')
   const { data: transactions } = await supabase.from('subscription_transactions').select('id, user_id, amount_dzd, transaction_date, status')
 
+  // --- Fetch Chargily Data ---
+  let chargilyTransactions: any[] = []
+  if (process.env.CHARGILY_SECRET_KEY) {
+    try {
+      const isTestMode = process.env.CHARGILY_SECRET_KEY.startsWith('test_')
+      const apiUrl = isTestMode 
+          ? 'https://pay.chargily.net/test/api/v2/checkouts'
+          : 'https://pay.chargily.net/api/v2/checkouts'
+
+      const res = await fetch(apiUrl, {
+        headers: { 'Authorization': `Bearer ${process.env.CHARGILY_SECRET_KEY}` },
+        next: { revalidate: 60 }
+      })
+      if (res.ok) {
+        const data = await res.json()
+        if (data && data.data) {
+          chargilyTransactions = data.data
+            .filter((c: any) => c.status === 'paid')
+            .map((c: any) => {
+              let userId = null
+              let planMonths = 1
+              if (Array.isArray(c.metadata)) {
+                userId = c.metadata.find((m: any) => m.user_id)?.user_id
+                planMonths = c.metadata.find((m: any) => m.plan_months)?.plan_months || 1
+              } else if (c.metadata && typeof c.metadata === 'object') {
+                userId = c.metadata.user_id
+                planMonths = c.metadata.plan_months || 1
+              }
+              return {
+                id: c.id,
+                user_id: userId || 'unknown',
+                amount_dzd: c.amount,
+                plan_months: planMonths,
+                transaction_date: new Date(typeof c.created_at === 'number' ? c.created_at * 1000 : c.created_at).toISOString(),
+                status: 'Success'
+              }
+            })
+        }
+      }
+    } catch (e) {
+      console.error('Failed to fetch Chargily checkouts', e)
+    }
+  }
+
+  const allTransactions = [...(transactions || []), ...chargilyTransactions]
+
   return (
     <>
       <header className="border-b border-white/10 bg-[#111827]/40 backdrop-blur-xl px-8 py-4 z-10 flex justify-between items-center">
@@ -29,7 +75,7 @@ export default async function DashboardOverview() {
           profiles={profiles || []}
           connections={connections || []}
           subscriptions={subscriptions || []}
-          transactions={transactions || []}
+          transactions={allTransactions}
         />
       </main>
     </>
