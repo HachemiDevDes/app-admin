@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-space-grotesk);
+}
+
+body {
+  font-family: var(--font-sans), sans-serif;
+}
+
+/* React Datepicker Custom Dark Theme */
+.react-datepicker-wrapper {
+  width: 100%;
+}
+.react-datepicker {
+  background-color: #111827 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+  font-family: inherit !important;
+  color: white !important;
+}
+.react-datepicker__header {
+  background-color: #111827 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top-left-radius: 0.75rem !important;
+  border-top-right-radius: 0.75rem !important;
+  padding-top: 1rem !important;
+  padding-bottom: 0.5rem !important;
+}
+.react-datepicker__current-month, .react-datepicker-time__header {
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: 1.125rem !important;
+}
+.react-datepicker__day-name {
+  color: #a1a1aa !important;
+  font-weight: 500 !important;
+  width: 2.25rem !important;
+  margin: 0.125rem !important;
+}
+.react-datepicker__day {
+  color: #d4d4d8 !important;
+  width: 2.25rem !important;
+  height: 2.25rem !important;
+  line-height: 2.25rem !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.2s !important;
+  margin: 0.125rem !important;
+}
+.react-datepicker__day:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+.react-datepicker__day--selected, .react-datepicker__day--keyboard-selected {
+  background-color: #1A73E8 !important;
+  color: white !important;
+  font-weight: 700 !important;
+}
+.react-datepicker__day--outside-month {
+  color: #52525b !important;
+}
+.react-datepicker__navigation {
+  top: 1rem !important;
+}
+.react-datepicker__navigation-icon::before {
+  border-color: #a1a1aa !important;
+}
+.react-datepicker__navigation:hover .react-datepicker__navigation-icon::before {
+  border-color: white !important;
+}
+

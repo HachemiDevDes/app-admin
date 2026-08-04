@@ -1,0 +1,1 @@
+const { createClient } = require('@supabase/supabase-js'); const supabase = createClient('https://awkreadldqmidcrrqukm.supabase.co', 'sb_publishable_MluMrwkWs5-YedITa6ggNw_imK2nv8z'); async function run() { const { data } = await supabase.from('connections').select('*').limit(1); console.log(data); } run();  
