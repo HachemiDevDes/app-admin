@@ -11,6 +11,7 @@ export default async function TransactionsPage() {
 
   // --- Fetch Chargily Data ---
   let chargilyTransactions: any[] = []
+  let fetchError: string | null = null
   if (process.env.CHARGILY_SECRET_KEY) {
     try {
       const isTestMode = process.env.CHARGILY_SECRET_KEY.startsWith('test_')
