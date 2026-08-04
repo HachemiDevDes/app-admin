@@ -15,6 +15,7 @@ export default async function DashboardOverview() {
 
   // --- Fetch Chargily Data ---
   let chargilyTransactions: any[] = []
+  let fetchError = null
   if (process.env.CHARGILY_SECRET_KEY) {
     try {
       const isTestMode = process.env.CHARGILY_SECRET_KEY.startsWith('test_')
@@ -50,10 +51,15 @@ export default async function DashboardOverview() {
                 status: 'Success'
               }
             })
+        } else {
+          fetchError = 'No data property in response'
         }
+      } else {
+        fetchError = `Status ${res.status}: ${await res.text()}`
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error('Failed to fetch Chargily checkouts', e)
+      fetchError = e.message
     }
   }
 
@@ -62,7 +68,18 @@ export default async function DashboardOverview() {
   return (
     <>
       <header className="border-b border-white/10 bg-[#111827]/40 backdrop-blur-xl px-8 py-4 z-10 flex justify-between items-center">
-        <h1 className="text-xl font-semibold text-white">Financial Dashboard</h1>
+        <div className="flex items-center gap-4">
+          <h1 className="text-xl font-semibold text-white">Financial Dashboard</h1>
+          {process.env.CHARGILY_SECRET_KEY ? (
+            <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full border border-green-500/30">Key Loaded</span>
+          ) : (
+            <span className="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded-full border border-red-500/30">Missing Key</span>
+          )}
+          {fetchError && (
+            <span className="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded-full border border-red-500/30" title={fetchError}>Fetch Error (Hover)</span>
+          )}
+          <span className="text-xs bg-zinc-500/20 text-zinc-400 px-2 py-1 rounded-full border border-zinc-500/30">Found {chargilyTransactions.length} Checkouts</span>
+        </div>
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 rounded-full bg-[#1A73E8] flex items-center justify-center text-sm font-bold shadow-md">
             {user?.email?.charAt(0).toUpperCase() ?? 'A'}
