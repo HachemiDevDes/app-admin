@@ -174,7 +174,7 @@ export default function CreateEventPage() {
                   <label className="block text-sm font-medium text-zinc-300 mb-2 flex items-center gap-2"><Calendar className="w-4 h-4 text-zinc-400"/> Start Date</label>
                   <DatePicker 
                     selected={startDate} 
-                    onChange={(date) => setStartDate(date)}
+                    onChange={(date: Date | null) => setStartDate(date)}
                     className="w-full bg-[#111827] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-500 outline-none focus:border-[#1A73E8] focus:ring-1 focus:ring-[#1A73E8] transition"
                     placeholderText="Select start date"
                     wrapperClassName="w-full"
@@ -185,7 +185,7 @@ export default function CreateEventPage() {
                   <label className="block text-sm font-medium text-zinc-300 mb-2 flex items-center gap-2"><Calendar className="w-4 h-4 text-zinc-400"/> End Date</label>
                   <DatePicker 
                     selected={endDate} 
-                    onChange={(date) => setEndDate(date)}
+                    onChange={(date: Date | null) => setEndDate(date)}
                     className="w-full bg-[#111827] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-500 outline-none focus:border-[#1A73E8] focus:ring-1 focus:ring-[#1A73E8] transition"
                     placeholderText="Select end date"
                     wrapperClassName="w-full"

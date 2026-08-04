@@ -246,7 +246,7 @@ export function UsersClient({ initialUsers }: { initialUsers: UserProfile[] }) {
                 </div>
                 {['Basic', 'Popular', 'Premium', 'Pro', 'Business'].includes(selectedUser.subscription?.tier || '') && (
                   <div className="absolute -bottom-1 -right-1 bg-[#10B981] text-black text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-[#111827]">
-                    {selectedUser.subscription.tier.toUpperCase()}
+                    {selectedUser.subscription?.tier.toUpperCase()}
                   </div>
                 )}
               </div>

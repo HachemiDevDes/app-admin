@@ -35,7 +35,7 @@ export default async function UsersPage() {
 
 
   // Fetch connections to count contacts per user
-  let connections = []
+  let connections: any[] = []
   if (profiles.length > 0) {
     try {
       const profileIds = profiles.map((p: any) => p.id)

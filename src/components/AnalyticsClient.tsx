@@ -374,7 +374,7 @@ export function AnalyticsClient({
                     ))}
                   </Pie>
                   <Tooltip 
-                    formatter={(value: number) => [`${value.toLocaleString()} DZD`, 'MRR']}
+                    formatter={(value: any) => [`${Number(value || 0).toLocaleString()} DZD`, 'MRR']}
                     contentStyle={{ backgroundColor: '#111827', borderColor: '#ffffff20', borderRadius: '8px' }} 
                   />
                   <Legend verticalAlign="bottom" height={36}/>
