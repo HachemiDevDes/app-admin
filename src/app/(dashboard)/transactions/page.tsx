@@ -13,10 +13,7 @@ export default async function TransactionsPage() {
   let chargilyTransactions: any[] = []
   if (process.env.CHARGILY_SECRET_KEY) {
     try {
-      const isTestMode = process.env.CHARGILY_SECRET_KEY.startsWith('test_')
-      const apiUrl = isTestMode 
-          ? 'https://pay.chargily.net/test/api/v2/checkouts'
-          : 'https://pay.chargily.net/api/v2/checkouts'
+      const apiUrl = 'https://pay.chargily.net/api/v2/checkouts'
 
       const res = await fetch(apiUrl, {
         headers: { 'Authorization': `Bearer ${process.env.CHARGILY_SECRET_KEY}` },
@@ -57,10 +54,12 @@ export default async function TransactionsPage() {
   const allTransactions = [...(dbTransactions || []).map(t => ({ ...t, source: 'Database', plan_months: t.plan_months || 1 })), ...chargilyTransactions]
   
   // Fetch profiles only for users who have transactions
-  const userIds = Array.from(new Set(allTransactions.map(t => t.user_id).filter(id => id && id !== 'unknown')))
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+  const userIds = Array.from(new Set(allTransactions.map(t => t.user_id?.trim()).filter(id => id && uuidRegex.test(id))))
   let profiles: any[] = []
   if (userIds.length > 0) {
-    const { data } = await supabase.from('profiles').select('id, full_name, username, email, phone').in('id', userIds)
+    const { data, error } = await supabase.from('profiles').select('id, full_name, username, email, phone').in('id', userIds)
+    if (error) console.error('Error fetching profiles:', error)
     if (data) profiles = data
   }
 
