@@ -21,7 +21,9 @@ export function TransactionsClient({
   profiles: Profile[]
 }) {
   const getProfile = (userId: string) => {
-    return profiles.find(p => p.id === userId)
+    if (!userId) return undefined
+    const cleanId = userId.trim().toLowerCase()
+    return profiles.find(p => p.id.toLowerCase() === cleanId)
   }
 
   return (
@@ -58,7 +60,6 @@ export function TransactionsClient({
               ) : (
                 transactions.map((tx) => {
                   const profile = getProfile(tx.user_id)
-                  const displayName = profile?.full_name || profile?.username || profile?.email || profile?.phone || 'Unknown User'
                   
                   return (
                     <tr key={tx.id} className="hover:bg-white/5 transition-colors group">
@@ -79,9 +80,17 @@ export function TransactionsClient({
                           <div className="h-8 w-8 rounded-full bg-zinc-800 flex items-center justify-center border border-white/10">
                             <User className="h-4 w-4 text-zinc-400" />
                           </div>
-                          <div>
-                            <div className="font-medium text-white">{displayName}</div>
-                            <div className="text-xs text-zinc-500 font-mono">{tx.user_id.slice(0, 8)}...</div>
+                          <div className="flex flex-col">
+                            <div className="font-medium text-white">
+                              {profile?.full_name || profile?.username || 'Unknown User'}
+                            </div>
+                            {profile?.email && (
+                              <div className="text-xs text-zinc-400">{profile.email}</div>
+                            )}
+                            {profile?.phone && (
+                              <div className="text-xs text-zinc-500">{profile.phone}</div>
+                            )}
+                            <div className="text-[10px] text-zinc-600 font-mono mt-0.5">{tx.user_id.slice(0, 8)}...</div>
                           </div>
                         </div>
                       </td>
