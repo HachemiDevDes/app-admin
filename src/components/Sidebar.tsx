@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Users, Link as LinkIcon, Settings, LogOut, CreditCard, MessageSquare, Bell, BarChart3, LayoutDashboard, Calendar } from 'lucide-react'
+import { Users, Link as LinkIcon, Settings, LogOut, CreditCard, MessageSquare, Bell, BarChart3, LayoutDashboard, Calendar, DollarSign } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 
@@ -17,6 +17,7 @@ export function Sidebar({ unreadSupportCount = 0 }: { unreadSupportCount?: numbe
     { name: 'Events', href: '/events', icon: Calendar },
     { name: 'Users', href: '/users', icon: Users },
     { name: 'Subscriptions', href: '/subscriptions', icon: CreditCard },
+    { name: 'Transactions', href: '/transactions', icon: DollarSign },
     { name: 'Support', href: '/support', icon: MessageSquare, badge: unreadSupportCount },
     { name: 'Notifications', href: '/notifications', icon: Bell },
     { name: 'Settings', href: '/settings', icon: Settings },
