@@ -18,7 +18,10 @@ export default async function DashboardOverview() {
   let fetchError = null
   if (process.env.CHARGILY_SECRET_KEY) {
     try {
-      const apiUrl = 'https://pay.chargily.net/api/v2/checkouts'
+      const isTestMode = process.env.CHARGILY_SECRET_KEY.startsWith('test_')
+      const apiUrl = isTestMode 
+          ? 'https://pay.chargily.net/test/api/v2/checkouts'
+          : 'https://pay.chargily.net/api/v2/checkouts'
 
       const res = await fetch(apiUrl, {
         headers: { 'Authorization': `Bearer ${process.env.CHARGILY_SECRET_KEY}` },
