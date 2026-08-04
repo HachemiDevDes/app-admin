@@ -2,7 +2,7 @@
 
 import { DollarSign, ExternalLink, Calendar as CalendarIcon, User } from 'lucide-react'
 
-type Profile = { id: string; full_name?: string; username?: string; email?: string }
+type Profile = { id: string; full_name?: string; username?: string; email?: string; phone?: string }
 type Transaction = { 
   id: string; 
   user_id: string; 
@@ -58,7 +58,7 @@ export function TransactionsClient({
               ) : (
                 transactions.map((tx) => {
                   const profile = getProfile(tx.user_id)
-                  const displayName = profile?.full_name || profile?.username || profile?.email || 'Unknown User'
+                  const displayName = profile?.full_name || profile?.username || profile?.email || profile?.phone || 'Unknown User'
                   
                   return (
                     <tr key={tx.id} className="hover:bg-white/5 transition-colors group">

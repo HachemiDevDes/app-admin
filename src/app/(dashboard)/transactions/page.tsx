@@ -7,8 +7,6 @@ export default async function TransactionsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Fetch raw data for profiles to get user names/emails
-  const { data: profiles } = await supabase.from('profiles').select('id, full_name, username, email')
   const { data: dbTransactions } = await supabase.from('subscription_transactions').select('*')
 
   // --- Fetch Chargily Data ---
@@ -58,6 +56,14 @@ export default async function TransactionsPage() {
 
   const allTransactions = [...(dbTransactions || []).map(t => ({ ...t, source: 'Database', plan_months: t.plan_months || 1 })), ...chargilyTransactions]
   
+  // Fetch profiles only for users who have transactions
+  const userIds = Array.from(new Set(allTransactions.map(t => t.user_id).filter(id => id && id !== 'unknown')))
+  let profiles: any[] = []
+  if (userIds.length > 0) {
+    const { data } = await supabase.from('profiles').select('id, full_name, username, email, phone').in('id', userIds)
+    if (data) profiles = data
+  }
+
   // Sort by newest first
   allTransactions.sort((a, b) => new Date(b.transaction_date).getTime() - new Date(a.transaction_date).getTime())
 
